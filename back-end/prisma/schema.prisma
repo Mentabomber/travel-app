@@ -12,3 +12,68 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id            Int               @id @unique @default(autoincrement())
+  email         String            @unique
+  name          String
+  surname       String
+  isAdmin       Boolean           @default(false)
+  password      String
+  refreshTokens RefreshToken[]
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  journeis      JourneisOnUsers[]
+  Message       Message[]
+}
+
+model Journey {
+  id          Int               @id @unique @default(autoincrement())
+  title       String            @db.VarChar(100)
+  description String            @db.Text
+  image       String?           @db.Text
+  published   Boolean           @default(true)
+  duration    Int
+  stages      Stage[]
+  users       JourneisOnUsers[]
+}
+
+model JourneisOnUsers {
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  journey    Journey  @relation(fields: [journeyId], references: [id])
+  journeyId  Int
+  userType   String   @default("partecipant")
+  assignedAt DateTime @default(now())
+  assignedBy String
+
+  @@id([userId, journeyId])
+}
+
+model Stage {
+  id          Int      @id @unique @default(autoincrement())
+  title       String   @db.VarChar(100)
+  description String?  @db.VarChar(100)
+  date        DateTime @db.Date
+  lat         Float
+  lng         Float
+  Journey     Journey  @relation(fields: [journeyId], references: [id])
+  journeyId   Int
+}
+
+model Message {
+  id       Int    @id @unique @default(autoincrement())
+  content  String @db.Text
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId Int
+}
+
+model RefreshToken {
+  id          Int      @id @unique @default(autoincrement())
+  hashedToken String
+  userId      Int
+  User        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  revoked     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
