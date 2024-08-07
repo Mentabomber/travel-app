@@ -62,10 +62,12 @@ model Stage {
 }
 
 model Message {
-  id       Int    @id @unique @default(autoincrement())
-  content  String @db.Text
-  author   User   @relation(fields: [authorId], references: [id])
-  authorId Int
+  id        Int      @id @unique @default(autoincrement())
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
 }
 
 model RefreshToken {
