@@ -13,5 +13,13 @@
     "multer": "^1.4.5-lts.1",
     "node": "^20.16.0",
     "nodemon": "^3.1.4"
+  },
+  "name": "travel-app",
+  "version": "1.0.0",
+  "prisma": {
+    "seed": "node prisma/seeders/seed.js"
+  },
+  "scripts": {
+    "start": "nodemon server.js"
   }
 }

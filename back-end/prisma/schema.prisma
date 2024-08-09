@@ -36,6 +36,7 @@ model Journey {
   duration    Int
   stages      Stage[]
   users       JourneisOnUsers[]
+  messages    Message[]
 }
 
 model JourneisOnUsers {
@@ -68,6 +69,8 @@ model Message {
   updatedAt DateTime @updatedAt
   author    User     @relation(fields: [authorId], references: [id])
   authorId  Int
+  journey   Journey  @relation(fields: [journeyId], references: [id])
+  journeyId Int
 }
 
 model RefreshToken {
