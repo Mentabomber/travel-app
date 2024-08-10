@@ -65,7 +65,7 @@ async function main() {
       email: "simcictilen@gmail.com",
       name: "Tilen",
       surname: "Simcic",
-      journeis: {
+      journeys: {
         create: {
           journey: {
             connect: { id: journey.id },
@@ -78,6 +78,7 @@ async function main() {
       password: hashedPswd,
     },
   });
+
   const token = jsonwebtoken.sign(admin, process.env.JWT_SECRET, {
     expiresIn: "1000h",
   });

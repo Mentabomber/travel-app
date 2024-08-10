@@ -23,7 +23,7 @@ model User {
   refreshTokens RefreshToken[]
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
-  journeis      JourneisOnUsers[]
+  journeys      JourneysOnUsers[]
   Message       Message[]
 }
 
@@ -35,16 +35,16 @@ model Journey {
   published   Boolean           @default(true)
   duration    Int
   stages      Stage[]
-  users       JourneisOnUsers[]
+  users       JourneysOnUsers[]
   messages    Message[]
 }
 
-model JourneisOnUsers {
+model JourneysOnUsers {
   user       User     @relation(fields: [userId], references: [id])
   userId     Int
   journey    Journey  @relation(fields: [journeyId], references: [id])
   journeyId  Int
-  userType   String   @default("partecipant")
+  userType   String   @default("organizer")
   assignedAt DateTime @default(now())
   assignedBy String
 
