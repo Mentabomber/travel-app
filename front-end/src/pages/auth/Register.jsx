@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { handleInputChange } from "../utils/handleInputChange";
-import { useAuth } from "../contexts/AuthContext";
-import fetchApi from "../utils/fetchApi";
-import { useCompany } from "../contexts/CompanyContext";
-import FormInput from "../components/inputs/Input";
+import { handleInputChange } from "../../utils/handleInputChange";
+import { useAuth } from "../../contexts/AuthContext";
+import fetchApi from "../../utils/fetchApi";
+import { useCompany } from "../../contexts/CompanyContext";
+import FormInput from "../../components/inputs/Input";
 
 export default function Register() {
   let initiated = false;
@@ -124,9 +124,6 @@ export default function Register() {
   // const isFormValid = Object.keys(errors).length === 0;
   return (
     <>
-      <h1 className="text-4xl font-bold underline text-blue-800">
-        Hello world!
-      </h1>
       <div className="container mx-auto px-4">
         <div className="flex justify-center items-center h-screen">
           <div className="w-full max-w-md">

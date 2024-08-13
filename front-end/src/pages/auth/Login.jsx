@@ -1,8 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
-import { handleInputChange } from "../utils/handleInputChange";
+import { handleInputChange } from "../../utils/handleInputChange";
 import { useState } from "react";
-import { useAuth } from "../contexts/AuthContext";
-import fetchApi from "../utils/fetchApi";
+import { useAuth } from "../../contexts/AuthContext";
+import fetchApi from "../../utils/fetchApi";
 
 export default function Login() {
   const navigate = useNavigate();

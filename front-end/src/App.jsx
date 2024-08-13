@@ -1,11 +1,12 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
+import CreateJourney from "./pages/journeys/Create";
 // import Menu from "./pages/Menu";
 import DefaultLayout from "./pages/DefaultLayout";
 import { createContext, useEffect, useState } from "react";
 import { AuthProvider } from "./contexts/AuthContext";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
 // import Dashboard from "./pages/Dashboard";
 // import PrivateRoutes from "./middlewares/PrivateRoutes";
 // import RoleAccess from "./middlewares/RoleAccess";
@@ -54,6 +55,14 @@ function App() {
                   </GuestRoutes>
                 }
               ></Route>
+              <Route
+                path="new-journey"
+                element={<DefaultLayout />}
+                errorElement={<GenericError></GenericError>}
+              >
+                <Route index element={<CreateJourney />}></Route>
+                <Route path="user" element={<CreateJourney />}></Route>
+              </Route>
             </Route>
           </Routes>
         </AuthProvider>
