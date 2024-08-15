@@ -6,15 +6,17 @@ import { handleFormSubmit } from "../../utils/handleFormSubmit";
 const initialFormData = {
   title: "",
   description: "",
-  published: true,
-  image: "",
-  duration: 0,
-  stages: [],
+  date: "",
+  lat: 0,
+  lng: 0,
+  journeyId: 0,
 };
-
-export default function CreateNewJourney() {
+export default function NewStageOverlay() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const dateNow = Date.now();
+  const today = new Date(dateNow);
+  today.toLocaleDateString();
 
   const inputClasses =
     "w-full border-2 border-gray-300 rounded-lg px-4 py-2 transition-colors focus:outline-none focus:border-primary";
@@ -45,28 +47,16 @@ export default function CreateNewJourney() {
 
   useEffect(() => {}, []);
 
-  function getImagePreview() {
-    return typeof formData.image !== "string"
-      ? URL.createObjectURL(formData.image)
-      : formData.image;
-  }
-
   return (
     <>
-      <div className="container mx-auto px-4">
-        <h1 className="text-3xl">
-          Welcome {user?.name} {user?.surname}
-        </h1>
-      </div>
       <div onClick={(e) => e.stopPropagation()}>
         {error && <div className="p-6 text-white bg-red-600">{error}</div>}
-        <h1 className="text-2xl mb-12">Start a new Journey!</h1>
+        <h1 className="text-2xl mb-12">Create a new Stage!</h1>
 
         <form
           className="mb-8 flex-grow"
           onSubmit={(e) => handleFormSubmit(e, "journey")}
-          id="journeyForm"
-          name="journeys"
+          id="stageForm"
         >
           <div className="mb-4">
             <label htmlFor="title_input">Title</label>
@@ -97,46 +87,31 @@ export default function CreateNewJourney() {
                 {validationErrors.description}
               </div>
             )}
-          </div>
-
-          <div className="mb-4">
-            <label htmlFor="available_input">Publish</label>
-            <input
-              type="checkbox"
-              value={formData.published}
-              onChange={(e) => handleInputChange(e, "published")}
-              id="published_input"
-              className={inputClasses}
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="image_input" className="mb-1 block">
-              Image
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleInputChange(e, "image")}
-              id="image_input"
-              className={inputClasses}
-            />
-            {getImagePreview() && (
-              <img
-                src={getImagePreview()}
-                alt=""
-                className="w-32 h-32 object-cover"
+            <div className="mb-4">
+              <label htmlFor="date_input">Arrival Date</label>
+              <input
+                type="date"
+                min={today}
+                value={formData.date}
+                onChange={(e) => handleInputChange(e, "date")}
+                id="date_input"
+                className={inputClasses}
               />
-            )}
-            {validationErrors.image && (
-              <div className="error p-1 text-white bg-red-600 rounded">
-                {validationErrors.image}
-              </div>
-            )}
+              {validationErrors.date && (
+                <div className="error p-1 text-white bg-red-600 rounded">
+                  {validationErrors.date}
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* departure */}
-          {/* this should be necessary to track the place from where we are starting the journey but I'm considering if its needed  */}
-          {/* map with all stages */}
+          {/* I need a search bar to locate the place where I want to go after that save it maybe with an alert or a confirmation button so that it gets added to the stages list and also I need a button to remove a stage from the list if I change my mind while still creating my journey */}
+
+          {/* search bar */}
+
+          {/* lat */}
+
+          {/* lng */}
         </form>
 
         <div className="flex gap-4">
@@ -145,7 +120,6 @@ export default function CreateNewJourney() {
             form="tagForm"
             type="submit"
             onClick={handleFormSubmit}
-            name="journeys"
           >
             Add
           </button>
