@@ -1,5 +1,5 @@
-const AuthError = require("../exceptions/AuthError");
-const jsonwebtoken = require("jsonwebtoken");
+import AuthError from "../exceptions/AuthError";
+import { verify } from "jsonwebtoken";
 
 /**
  *
@@ -7,7 +7,7 @@ const jsonwebtoken = require("jsonwebtoken");
  * @param {*} res
  * @param {*} next
  */
-module.exports = (req, res, next) => {
+export default (req, res, next) => {
   // leggere il Bearer Token dal header della richiesta
   // Stringa che inizia con Bearer seguita da uno spazio e poi il token
   const bearer = req.headers.authorization;
@@ -19,7 +19,7 @@ module.exports = (req, res, next) => {
   // estraggo il token
   const token = bearer.split(" ")[1];
 
-  const user = jsonwebtoken.verify(token, process.env.JWT_ACCESS_SECRET);
+  const user = verify(token, process.env.JWT_ACCESS_SECRET);
 
   // passare i dati dell'utente alla req in modo che possiamo accedervi nei controller
   req["user"] = user;

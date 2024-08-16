@@ -1,8 +1,4 @@
-const {
-  validationResult,
-  checkSchema,
-  matchedData,
-} = require("express-validator");
+import { validationResult, checkSchema, matchedData } from "express-validator";
 
 function checkValidity(req, res, next) {
   const validation = validationResult(req);
@@ -19,13 +15,14 @@ function checkValidity(req, res, next) {
  * @param {*} schema
  * @returns
  */
-module.exports = function (schema) {
+export default function (schema) {
   return [
     // middleware che controlla lo schema
     checkSchema(schema),
     // middleware che controlla se ci sono errori di validazione
     checkValidity,
   ];
-};
+}
 
-module.exports.checkValidity = checkValidity;
+const _checkValidity = checkValidity;
+export { _checkValidity as checkValidity };
