@@ -2,7 +2,7 @@ async function fetchApi(path, method = "GET", body = null) {
   try {
     if (
       (method === "PUT" && path !== "/login") ||
-      (method === "POST" && path === "/photos/")
+      (method === "POST" && path === "/stages/")
     ) {
       {
         const resp = await fetch(import.meta.env.VITE_API_URL + path, {
@@ -18,8 +18,6 @@ async function fetchApi(path, method = "GET", body = null) {
           alert("Errore durante l'invio dei dati: " + (await resp.text()));
         }
 
-        // if (method === "POST") {
-        // is this the best way to get the id from the newly created post so that I can use it to redirect the page after creation to the show post? do I also need an await before resp.json() ?
         return await resp.json();
         // }
       }

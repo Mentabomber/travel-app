@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
-import CreateJourney from "./pages/journeys/Create";
+import CreateNewJourney from "./pages/NewJourney";
 // import Menu from "./pages/Menu";
 import DefaultLayout from "./pages/DefaultLayout";
 import { createContext, useEffect, useState } from "react";
@@ -60,8 +60,8 @@ function App() {
                 element={<DefaultLayout />}
                 errorElement={<GenericError></GenericError>}
               >
-                <Route index element={<CreateJourney />}></Route>
-                <Route path="user" element={<CreateJourney />}></Route>
+                <Route index element={<CreateNewJourney />}></Route>
+                <Route path="user" element={<CreateNewJourney />}></Route>
               </Route>
             </Route>
           </Routes>

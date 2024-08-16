@@ -2,6 +2,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { handleFormSubmit } from "../../utils/handleFormSubmit";
+import { handleInputChange } from "../../utils/handleInputChange";
 
 const initialFormData = {
   title: "",
@@ -22,26 +23,6 @@ export default function CreateNewJourney() {
   const [error, setError] = useState("");
   const [validationErrors, setValidationErrors] = useState("");
   const [created, setCreated] = useState(false);
-
-  function handleInputChange(e, key) {
-    const value = e.target.value;
-    const checked = e.target.checked;
-
-    let newValue = e.target.type === "checkbox" ? checked : value;
-
-    if (e.target.type === "file") {
-      // I get the first selected file that is an istance of File's class.
-      newValue = e.target.files[0];
-    }
-
-    console.log(newValue, "prima di essere mandata");
-    setFormData((prev) => {
-      return {
-        ...prev,
-        [key]: newValue,
-      };
-    });
-  }
 
   useEffect(() => {}, []);
 
@@ -64,7 +45,7 @@ export default function CreateNewJourney() {
 
         <form
           className="mb-8 flex-grow"
-          onSubmit={(e) => handleFormSubmit(e, "journey")}
+          onSubmit={(e) => handleFormSubmit(e, "journey", setFormData)}
           id="journeyForm"
           name="journeys"
         >
@@ -73,7 +54,7 @@ export default function CreateNewJourney() {
             <input
               type="text"
               value={formData.title}
-              onChange={(e) => handleInputChange(e, "title")}
+              onChange={(e) => handleInputChange(e, "title", setFormData)}
               id="title_input"
               className={inputClasses}
             />
@@ -88,7 +69,7 @@ export default function CreateNewJourney() {
             <input
               type="text"
               value={formData.description}
-              onChange={(e) => handleInputChange(e, "description")}
+              onChange={(e) => handleInputChange(e, "description", setFormData)}
               id="description_input"
               className={inputClasses}
             />
@@ -104,7 +85,7 @@ export default function CreateNewJourney() {
             <input
               type="checkbox"
               value={formData.published}
-              onChange={(e) => handleInputChange(e, "published")}
+              onChange={(e) => handleInputChange(e, "published", setFormData)}
               id="published_input"
               className={inputClasses}
             />
@@ -116,7 +97,7 @@ export default function CreateNewJourney() {
             <input
               type="file"
               accept="image/*"
-              onChange={(e) => handleInputChange(e, "image")}
+              onChange={(e) => handleInputChange(e, "image", setFormData)}
               id="image_input"
               className={inputClasses}
             />
@@ -133,7 +114,18 @@ export default function CreateNewJourney() {
               </div>
             )}
           </div>
-
+          <div className="mb-4">
+            <h3>stages</h3>
+            <button
+              className="w-full bg-gray-200 hover:bg-gray-400 px-8 py-4 rounded-lg text-gray-800 transition-colors"
+              form="tagForm"
+              type="submit"
+              onClick={handleFormSubmit}
+              name="journeys"
+            >
+              Add
+            </button>
+          </div>
           {/* departure */}
           {/* this should be necessary to track the place from where we are starting the journey but I'm considering if its needed  */}
           {/* map with all stages */}
