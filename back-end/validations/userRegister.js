@@ -1,79 +1,77 @@
-const { PrismaClient } = require("@prisma/client");
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 /**
  * @type {import("express-validator").Schema}
  */
-module.exports = {
-  name: {
-    in: ["body"],
-    notEmpty: {
-      options: {
-        ignore_whitespace: true,
-      },
-      errorMessage: "Il nome è obbligatorio",
+export const name = {
+  in: ["body"],
+  notEmpty: {
+    options: {
+      ignore_whitespace: true,
     },
-    isLength: {
-      options: {
-        min: 3,
-      },
-      errorMessage: "Il nome deve essere lungo almeno 3 caratteri",
-    },
+    errorMessage: "Name is required",
   },
-  surname: {
-    in: ["body"],
-    notEmpty: {
-      options: {
-        ignore_whitespace: true,
-      },
-      errorMessage: "Il cognome è obbligatorio",
+  isLength: {
+    options: {
+      min: 3,
     },
-    isLength: {
-      options: {
-        min: 3,
-      },
-      errorMessage: "Il cognome deve essere lungo almeno 3 caratteri",
-    },
+    errorMessage: "Name must be at least 3 characters long",
   },
-  email: {
-    in: ["body"],
-    isEmail: {
-      errorMessage: "L'email inserita non è valida",
+};
+export const surname = {
+  in: ["body"],
+  notEmpty: {
+    options: {
+      ignore_whitespace: true,
     },
-    notEmpty: {
-      errorMessage: "L'email è obbligatoria",
+    errorMessage: "Surname is required",
+  },
+  isLength: {
+    options: {
+      min: 3,
     },
-    custom: {
-      // value è il valore dell'email. Viene passata automaticamente da express-validator
-      options: async (value) => {
-        // Cerco se esiste a db un utente con la stessa email
-        const alreadyExists = await prisma.user.findUnique({
-          where: {
-            email: value,
-          },
-        });
+    errorMessage: "Surname must be at least 3 characters long",
+  },
+};
+export const email = {
+  in: ["body"],
+  isEmail: {
+    errorMessage: "Email given is not valid",
+  },
+  notEmpty: {
+    errorMessage: "Email is required",
+  },
+  custom: {
+    // "value" is the value of the email. It is automatically passed by express-validator.
+    options: async (value) => {
+      // I check if there is a user in the database with the same email.
+      const alreadyExists = await prisma.user.findUnique({
+        where: {
+          email: value,
+        },
+      });
 
-        // Se alreadyExists ha un valore, vuol dire che la mail esiste già
-        if (alreadyExists) {
-          return Promise.reject("L'email inserita è già in uso");
-        }
+      // If alreadyExists has a value, it means the email already exists.
+      if (alreadyExists) {
+        return Promise.reject("Email given is already in use");
+      }
 
-        return true;
-      },
+      return true;
     },
   },
-  password: {
-    in: ["body"],
-    isStrongPassword: {
-      options: {
-        minLength: 8,
-        minLowercase: 1,
-        minUppercase: 1,
-        minNumbers: 1,
-        minSymbols: 1,
-      },
+};
+export const password = {
+  in: ["body"],
+  isStrongPassword: {
+    options: {
+      minLength: 8,
+      minLowercase: 1,
+      minUppercase: 1,
+      minNumbers: 1,
+      minSymbols: 1,
     },
-    errorMessage:
-      "La password deve essere lunga almeno 8 caratteri, contenere almeno una lettera maiuscola, una minuscola, un numero e un carattere speciale",
   },
+  errorMessage:
+    "The password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, a number, and a special character.",
 };
