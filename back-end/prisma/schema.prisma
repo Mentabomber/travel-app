@@ -58,7 +58,7 @@ model Stage {
   date        DateTime @db.Date
   lat         Float
   lng         Float
-  Journey     Journey  @relation(fields: [journeyId], references: [id])
+  Journey     Journey  @relation(fields: [journeyId], references: [id], onDelete: Cascade)
   journeyId   Int
 }
 
@@ -69,7 +69,7 @@ model Message {
   updatedAt DateTime @updatedAt
   author    User     @relation(fields: [authorId], references: [id])
   authorId  Int
-  journey   Journey  @relation(fields: [journeyId], references: [id])
+  journey   Journey  @relation(fields: [journeyId], references: [id], onDelete: Cascade)
   journeyId Int
 }
 

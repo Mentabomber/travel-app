@@ -1,9 +1,17 @@
 import { PrismaClient } from "@prisma/client";
+import { ValidationError } from "../exceptions/ValidationError";
+import { validationResult } from "express-validator";
 const prisma = new PrismaClient();
 
 async function store(req, res) {
   const inputData = req.body;
+  const validation = validationResult(req);
 
+  if (!validation.isEmpty()) {
+    return next(
+      new ValidationError("Check the input data", validation.array())
+    );
+  }
   const newStage = await prisma.stage.create({
     data: {
       title: inputData.title,
@@ -49,114 +57,46 @@ async function showAllJourneyStages(req, res) {
       .json({ error: "An error occurred while fetching stages" });
   }
 }
-async function update(req, res) {
+async function update(req, res, next) {
   const validation = validationResult(req);
-  // isEmpty si riferisce all'array degli errori di validazione.
-  // Se NON è vuoto, vuol dire che ci sono errori
+
   if (!validation.isEmpty()) {
     return next(
-      new ValidationError("Controllare i dati inseriti", validation.array())
+      new ValidationError("Check the input data", validation.array())
     );
   }
-  const id = req.params.id;
 
-  let datiInIngresso = req.validatedData;
-  console.log(datiInIngresso, "dati ingresso");
-  if (datiInIngresso.published === "true") {
-    datiInIngresso.published = true;
-  } else {
-    datiInIngresso.published = false;
-  }
-  if (req.file) {
-    let image = req.file;
-    console.log(image, "image");
-    try {
-      const categoriesList = await prisma.category.findMany();
+  const id = parseInt(req.params.id);
+  const inputData = req.body;
 
-      datiInIngresso.image = image.filename;
-      const photo = await prisma.photo.findUnique({
-        where: {
-          id: parseInt(id),
-        },
-      });
-
-      if (!photo) {
-        throw new Error("Not found");
-      }
-      // Get the IDs of categories to disconnect
-
-      const categoryIdsToDisconnect = categoriesList
-        .filter((cat) => !datiInIngresso.categories.includes(cat.id.toString()))
-        .map((cat) => ({ id: cat.id }));
-
-      const updatePhoto = await prisma.photo.update({
-        where: {
-          id: parseInt(id),
-        },
-        data: {
-          title: datiInIngresso.title,
-          image: image.path.replace(/^storage\\/, ""),
-          description: datiInIngresso.description,
-          published: datiInIngresso.published,
-          categories: {
-            connect: datiInIngresso.categories.split(",").map((idCategory) => ({
-              id: parseInt(idCategory),
-            })),
-            disconnect: categoryIdsToDisconnect, // Disconnect categories not found in datiInIngresso.categories
-          },
-        },
-        include: {
-          categories: true,
-          user: true,
-        },
-      });
-
-      if (photo.image) {
-        fs.unlinkSync("storage/" + photo.image);
-        console.log("Immagine precedente eliminata:", photo.image);
-      }
-      return res.json(updatePhoto);
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: error });
-    }
-  } else {
-    const categoriesList = await prisma.category.findMany();
-
-    const photo = await prisma.photo.findUnique({
-      where: {
-        id: parseInt(id),
-      },
+  try {
+    // Check if the stage exists
+    const stage = await prisma.stage.findUnique({
+      where: { id: id },
     });
-    if (!photo) {
-      throw new Error("Not found");
-    }
-    // Get the IDs of categories to disconnect
-    const categoryIdsToDisconnect = categoriesList
-      .filter((cat) => !datiInIngresso.categories.includes(cat.id.toString()))
-      .map((cat) => ({ id: cat.id }));
 
-    const updatePhoto = await prisma.photo.update({
-      where: {
-        id: parseInt(id),
-      },
+    if (!stage) {
+      return res.status(404).json({ error: "Stage not found" });
+    }
+
+    // Update the stage
+    const updatedStage = await prisma.stage.update({
+      where: { id: id },
       data: {
-        title: datiInIngresso.title,
-        description: datiInIngresso.description,
-        published: datiInIngresso.published,
-        categories: {
-          connect: datiInIngresso.categories.split(",").map((idCategory) => ({
-            id: parseInt(idCategory),
-          })),
-          disconnect: categoryIdsToDisconnect, // Disconnect categories not found in datiInIngresso.categories
-        },
-      },
-      include: {
-        categories: true,
-        user: true,
+        title: inputData.title,
+        description: inputData.description,
+        date: inputData.date,
+        lat: inputData.lat,
+        lng: inputData.lng,
       },
     });
-    return res.json(updatePhoto);
+
+    return res.json(updatedStage);
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ error: "An error occurred while updating the stage" });
   }
 }
 async function destroy(req, res) {
@@ -178,5 +118,6 @@ async function destroy(req, res) {
 export default {
   store,
   showAllJourneyStages,
+  update,
   destroy,
 };
