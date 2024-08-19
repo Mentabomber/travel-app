@@ -25,6 +25,29 @@ async function store(req, res) {
   return res.json(newStage);
 }
 
+async function show(req, res) {
+  const { id } = req.params;
+
+  try {
+    // Fetch the stage by ID
+    const showStage = await prisma.stage.findUnique({
+      where: {
+        id: parseInt(id), // Ensure ID is an integer
+      },
+    });
+
+    if (!showStage) {
+      return res.status(404).json({ error: "Stage not found" });
+    }
+
+    return res.json(showStage);
+  } catch (error) {
+    console.error(error); // Log the error for debugging purposes
+    return res
+      .status(500)
+      .json({ error: "An error occurred while fetching the stage" });
+  }
+}
 async function showAllJourneyStages(req, res) {
   try {
     const { journeyId } = req.params;
@@ -117,6 +140,7 @@ async function destroy(req, res) {
 
 export default {
   store,
+  show,
   showAllJourneyStages,
   update,
   destroy,

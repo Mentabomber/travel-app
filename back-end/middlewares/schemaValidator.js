@@ -11,15 +11,15 @@ function checkValidity(req, res, next) {
 }
 
 /**
- * Metodo che ritorna un array di middleware per la validazione dello schema
+ * Method that returns an array of middleware for schema validation
  * @param {*} schema
  * @returns
  */
 export default function (schema) {
   return [
-    // middleware che controlla lo schema
+    // Middleware that validates the schema
     checkSchema(schema),
-    // middleware che controlla se ci sono errori di validazione
+    // "Middleware that checks for validation errors
     checkValidity,
   ];
 }

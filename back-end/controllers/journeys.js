@@ -73,6 +73,8 @@ async function show(req, res) {
             title: true,
             description: true,
             date: true,
+            lat: true,
+            lng: true,
           },
         },
         user: {
@@ -139,6 +141,8 @@ async function index(req, res) {
             type: true,
             description: true,
             date: true,
+            lat: true,
+            lng: true,
           },
         },
         user: {
@@ -223,7 +227,7 @@ async function update(req, res) {
 
       if (journey.image) {
         unlinkSync("storage/" + journey.image);
-        console.log("Previous immage deleted:", journey.image);
+        console.log("Previous image deleted:", journey.image);
       }
       return res.json(updateJourney);
     } catch (error) {
