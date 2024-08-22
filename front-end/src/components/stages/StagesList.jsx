@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-export function StagesList() {
+export default function StagesList() {
   let initiated = false;
   const [stagesList, setStagesList] = useState([]);
 
@@ -17,11 +17,11 @@ export function StagesList() {
       await fetch("http://localhost:3307/stages/" + id)
     ).json();
 
-    // apriamo l'overlay
+    // opening the overlay
     onEditStage(stageData);
   }
 
-  // All'avvio dell'applicazione, fetchiamo i dati
+  // At the start of the application, fetch data
   useEffect(() => {
     if (initiated) {
       return;
@@ -37,7 +37,7 @@ export function StagesList() {
       <section className="py-8">
         <div className="container px-4 mx-auto">
           {stagesList
-            .filter((stage) => stage.journeyId === journey.id) // Filtra solo le foto con published true
+            .filter((stage) => stage.journeyId === journey.id)
             .map((stage) => (
               <StageSection
                 key={stage.id}
@@ -50,13 +50,13 @@ export function StagesList() {
     </>
   );
 }
-function StageSection(stage, handleEditClick) {
+export function StageSection(stage, handleEditClick) {
   return (
     <div className={"w-full py-24 border-b flex"}>
       <div className={"flex flex-col gap-6  w-2/3 pl-24"}>
         <h2 className="text-4xl font-semibold mb-4">{stage.title}</h2>
 
-        {/* descrizione */}
+        {/* description */}
         <p className="text-xl text-gray-500">
           {stage.description ?? "Description not available"}
         </p>

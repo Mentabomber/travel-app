@@ -72,6 +72,7 @@ async function login(req, res, next) {
 async function me(req, res, next) {
   // Recuperare i dati inseriti dall'utente
   const { email } = req.user;
+  console.log(req.user, "user");
 
   // controllare che ci sia un utente con quella email
   const user = await prisma.user.findUnique({
