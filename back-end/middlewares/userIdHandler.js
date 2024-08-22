@@ -1,7 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-import WrongUser from "../exceptions/WrongUser";
-import { verify } from "jsonwebtoken";
+import WrongUser from "../exceptions/WrongUser.js";
+import pkg from "jsonwebtoken";
+const { verify } = pkg;
 
 /**
  *

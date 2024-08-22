@@ -1,4 +1,5 @@
 async function fetchApi(path, method = "GET", body = null) {
+  // path "/login"  method POST
   try {
     if (
       (method === "PUT" && path !== "/login") ||
@@ -22,6 +23,8 @@ async function fetchApi(path, method = "GET", body = null) {
         // }
       }
     } else {
+      console.log(import.meta.env.VITE_API_URL + path, "path");
+
       const resp = await fetch(import.meta.env.VITE_API_URL + path, {
         method,
         headers: {
@@ -32,6 +35,7 @@ async function fetchApi(path, method = "GET", body = null) {
         },
         body: body ? JSON.stringify(body) : null,
       });
+      console.log(resp, "resp");
 
       const data = await resp.json();
 

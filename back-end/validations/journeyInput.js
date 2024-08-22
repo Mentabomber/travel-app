@@ -66,4 +66,5 @@ export const journeyValidationSchema = {
   },
 };
 
-export const validateJourney = checkSchema(journeyValidationSchema);
+const validateJourney = checkSchema(journeyValidationSchema);
+export default validateJourney;

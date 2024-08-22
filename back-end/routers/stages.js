@@ -2,21 +2,16 @@ import { Router } from "express";
 const router = Router();
 
 //controllers
-import {
-  store,
-  showAllJourneyStages,
-  update,
-  destroy,
-} from "../controllers/stages";
+import stagesController from "../controllers/stages.js";
 
 //middlewares
-import authHandlerMiddleware from "../middlewares/authHandler";
-import journeyRoleHandler from "../middlewares/journeyRoleHandler";
+import authHandlerMiddleware from "../middlewares/authHandler.js";
+import journeyRoleHandler from "../middlewares/journeyRoleHandler.js";
 
 //validators
 
-import { checkValidity } from "../middlewares/schemaValidator";
-import { validateStage } from "../validations/stageInput";
+import { checkValidity } from "../middlewares/schemaValidator.js";
+import validateStage from "../validations/stageInput.js";
 
 router.post(
   "/",
@@ -24,12 +19,12 @@ router.post(
   journeyRoleHandler("organizer"),
   validateStage,
   checkValidity,
-  store
+  stagesController.store
 );
 
-router.get("/:id", show);
+router.get("/:id", stagesController.show);
 
-router.get("/", showAllJourneyStages);
+router.get("/", stagesController.showAllJourneyStages);
 
 router.put(
   "/:id",
@@ -37,14 +32,14 @@ router.put(
   journeyRoleHandler("organizer"),
   validateStage,
   checkValidity,
-  update
+  stagesController.update
 );
 
 router.delete(
   "/:id",
   authHandlerMiddleware,
   journeyRoleHandler("organizer"),
-  destroy
+  stagesController.destroy
 );
 
 export default router;

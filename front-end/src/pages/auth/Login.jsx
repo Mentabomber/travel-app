@@ -18,11 +18,12 @@ export default function Login() {
     try {
       // chiamo l'endpoint di login
       const resp = await fetchApi("/login", "POST", formData);
+      console.log(resp, "resp");
 
       // salvo i dati nel AuthContext
       handleLoginOrRegistration(resp);
 
-      navigate("/dashboard");
+      navigate("/new-journey");
     } catch (err) {
       setError(err.message);
     }

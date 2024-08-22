@@ -1,9 +1,9 @@
 import { PrismaClient } from "@prisma/client";
-import ValidationError from "../exceptions/ValidationError.js";
+import { ValidationError } from "../exceptions/ValidationError";
 import { validationResult } from "express-validator";
 const prisma = new PrismaClient();
 
-async function store(req, res) {
+async function send(req, res) {
   const inputData = req.body;
   const validation = validationResult(req);
 
@@ -48,7 +48,7 @@ async function show(req, res) {
       .json({ error: "An error occurred while fetching the stage" });
   }
 }
-async function showAllJourneyStages(req, res) {
+async function showAllMessages(req, res) {
   try {
     const { journeyId } = req.params;
 
@@ -80,7 +80,7 @@ async function showAllJourneyStages(req, res) {
       .json({ error: "An error occurred while fetching stages" });
   }
 }
-async function update(req, res, next) {
+async function modify(req, res, next) {
   const validation = validationResult(req);
 
   if (!validation.isEmpty()) {
@@ -139,9 +139,9 @@ async function destroy(req, res) {
 }
 
 export default {
-  store,
+  send,
   show,
-  showAllJourneyStages,
-  update,
+  showAllMessages,
+  modify,
   destroy,
 };

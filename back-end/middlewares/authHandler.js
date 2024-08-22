@@ -1,5 +1,6 @@
-import AuthError from "../exceptions/AuthError";
-import { verify } from "jsonwebtoken";
+import AuthError from "../exceptions/AuthError.js";
+import pkg from "jsonwebtoken";
+const { verify } = pkg;
 
 /**
  *

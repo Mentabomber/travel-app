@@ -1,14 +1,15 @@
-const { PrismaClient } = require("@prisma/client");
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-const { matchedData } = require("express-validator");
-const bcrypt = require("bcrypt");
-const jsonwebtoken = require("jsonwebtoken");
-const AuthError = require("../exceptions/AuthError");
+import { matchedData } from "express-validator";
+import { hash, compare } from "bcrypt";
+import pkg from "jsonwebtoken";
+const { sign } = pkg;
+import AuthError from "../exceptions/AuthError.js";
 
 async function register(req, res) {
   const sanitizedData = matchedData(req);
   // devo criptare la password in ingresso prima di salvarla nel db
-  sanitizedData.password = await bcrypt.hash(sanitizedData.password, 10);
+  sanitizedData.password = await hash(sanitizedData.password, 10);
 
   // salvataggio nel db
   const user = await prisma.user.create({
@@ -24,7 +25,7 @@ async function register(req, res) {
   });
 
   // genero il token JWT
-  const token = jsonwebtoken.sign(user, process.env.JWT_SECRET, {
+  const token = sign(user, process.env.JWT_SECRET, {
     expiresIn: "1h",
   });
 
@@ -49,14 +50,14 @@ async function login(req, res, next) {
   }
 
   // controllare che la password sia corretta
-  const passMatch = await bcrypt.compare(password, user.password);
+  const passMatch = await compare(password, user.password);
 
   if (!passMatch) {
     return next(new AuthError("Password errata"));
   }
 
   // generare il token JWT
-  const token = jsonwebtoken.sign(user, process.env.JWT_SECRET, {
+  const token = sign(user, process.env.JWT_SECRET, {
     expiresIn: "1h",
   });
 
@@ -106,7 +107,7 @@ async function showEmails(req, res) {
     res.status(500).json({ error: "Internal Server Error" });
   }
 }
-module.exports = {
+export default {
   register,
   login,
   me,

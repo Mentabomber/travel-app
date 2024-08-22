@@ -77,4 +77,5 @@ export const stageValidationSchema = {
   },
 };
 
-export const validateStage = checkSchema(stageValidationSchema);
+const validateStage = checkSchema(stageValidationSchema);
+export default validateStage;

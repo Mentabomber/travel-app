@@ -1,4 +1,4 @@
-import AuthError from "../exceptions/AuthError";
+import AuthError from "../exceptions/AuthError.js";
 
 /**
  * Middleware che controlla il ruolo dell'utente

@@ -2,16 +2,17 @@ import { Router } from "express";
 const router = Router();
 import { mkdirSync } from "fs";
 //controllers
-import { store, show, index, update, destroy } from "../controllers/journeys";
+import journeysController from "../controllers/journeys.js";
 //middlewares
-import authHandlerMiddleware from "../middlewares/authHandler";
-import userIdHandlerMiddleware from "../middlewares/userIdHandler";
-import authRoleHandlerMiddleware from "../middlewares/authRoleHandler";
-import notFound from "../middlewares/routeNotFound";
+import authHandlerMiddleware from "../middlewares/authHandler.js";
+import userIdHandlerMiddleware from "../middlewares/userIdHandler.js";
+import journeyRoleHandler from "../middlewares/journeyRoleHandler.js";
+import authRoleHandlerMiddleware from "../middlewares/authRoleHandler.js";
+import notFound from "../middlewares/routeNotFound.js";
 //validators
 
-import { checkValidity } from "../middlewares/schemaValidator";
-import { validateJourney } from "../validations/journeyInput";
+import { checkValidity } from "../middlewares/schemaValidator.js";
+import validateJourney from "../validations/journeyInput.js";
 
 import multer, { diskStorage } from "multer";
 
@@ -34,12 +35,12 @@ router.post(
   multer({ storage: storage }).single("image"),
   validateJourney,
   checkValidity,
-  store
+  journeysController.store
 );
 
-router.get("/:id", show);
+router.get("/:id", journeysController.show);
 
-router.get("/", index);
+router.get("/", journeysController.index);
 
 router.put(
   "/:id",
@@ -49,7 +50,7 @@ router.put(
   multer({ storage: storage }).single("image"),
   validateJourney,
   checkValidity,
-  update
+  journeysController.update
 );
 
 router.delete(
@@ -57,7 +58,7 @@ router.delete(
   authHandlerMiddleware,
   userIdHandlerMiddleware,
   journeyRoleHandler("organizer"),
-  destroy
+  journeysController.destroy
 );
 
 export default router;

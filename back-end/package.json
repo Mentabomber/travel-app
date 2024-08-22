@@ -19,6 +19,7 @@
   "prisma": {
     "seed": "node prisma/seeders/seed.js"
   },
+  "type": "module",
   "scripts": {
     "start": "nodemon server.js"
   }

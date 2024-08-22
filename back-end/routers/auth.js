@@ -1,29 +1,29 @@
-const { Router } = require("express");
+import { Router } from "express";
 const router = Router();
 
 //controllers
-const authController = require("../controllers/auth");
+import authControllers from "../controllers/auth.js";
 
 //middlewares
-const { checkSchema } = require("express-validator");
-const { checkValidity } = require("../middlewares/schemaValidator");
-const userRegister = require("../validations/userRegister");
-const userLogin = require("../validations/userLogin");
-const authHandler = require("../middlewares/authHandler");
+import { checkSchema } from "express-validator";
+import { checkValidity } from "../middlewares/schemaValidator.js";
+import userRegister from "../validations/userRegister.js";
+import userLogin from "../validations/userLogin.js";
+import authHandler from "../middlewares/authHandler.js";
 
 router.post(
   "/register",
   checkSchema(userRegister),
   checkValidity,
-  authController.register
+  authControllers.register
 );
 router.post(
   "/login",
   checkSchema(userLogin),
   checkValidity,
-  authController.login
+  authControllers.login
 );
 
-router.get("/me", authHandler, authController.me);
-router.get("/showEmails", authController.showEmails);
-module.exports = router;
+router.get("/me", authHandler, authControllers.me);
+router.get("/showEmails", authControllers.showEmails);
+export default router;

@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-import { ValidationError } from "../exceptions/ValidationError";
+import ValidationError from "../exceptions/ValidationError.js";
 import { validationResult } from "express-validator";
 import { unlinkSync } from "fs";
 

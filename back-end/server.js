@@ -1,29 +1,43 @@
-const express = require("express");
-const dotenv = require("dotenv");
+import express, { json, static as expressStatic } from "express";
+import { config } from "dotenv";
 //routes
-const authRouter = require("./routers/auth");
+import authRouter from "./routers/auth.js";
+import journeysRouter from "./routers/journeys.js";
+import stagesRouter from "./routers/stages.js";
+// const messagesRouter = require("./routers/messages");
 
 //middlewares
-
+import errorsHandlerMiddleware from "./middlewares/errorsHandler.js";
+import routeNotFoundMiddleware from "./middlewares/routeNotFound.js";
 //cors
-const cors = require("cors");
+import cors from "cors";
 
-dotenv.config();
+config();
 
 const app = express();
 const port = process.env.PORT || 3307;
 app.use(cors());
 
-app.use(express.json());
+app.use(json());
 
 app.use((req, res, next) => {
   console.log("Request:", req.url);
   next();
 });
-app.use(express.static("public"));
-app.use(express.static("storage"));
+app.use(expressStatic("public"));
+app.use(expressStatic("storage"));
+
+app.use("/journeys", journeysRouter);
+
+app.use("/stages", stagesRouter);
 
 app.use("", authRouter);
+
+// app.use("/messages", messagesRouter);
+
+app.use(errorsHandlerMiddleware);
+
+app.use(routeNotFoundMiddleware);
 
 app.listen(port, () => {
   console.log(`Example app listening on http://localhost:${port}`);
