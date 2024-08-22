@@ -34,11 +34,7 @@ function App() {
               element={<DefaultLayout />}
               errorElement={<GenericError></GenericError>}
             >
-              <Route
-                path="/"
-                element={<Home />}
-                errorElement={<GenericError></GenericError>}
-              ></Route>
+              <Route path="/" element={<Home />}></Route>
               <Route
                 path="/login"
                 element={
@@ -55,11 +51,7 @@ function App() {
                   </GuestRoutes>
                 }
               ></Route>
-              <Route
-                path="new-journey"
-                element={<DefaultLayout />}
-                errorElement={<GenericError></GenericError>}
-              >
+              <Route path="new-journey">
                 <Route index element={<CreateNewJourney />}></Route>
                 <Route path="user" element={<CreateNewJourney />}></Route>
               </Route>

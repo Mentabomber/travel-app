@@ -8,7 +8,7 @@ export default function StagesList() {
   async function fetchData() {
     const url = "http://localhost:3307/stages/";
     const jsonData = await (await fetch(url)).json();
-
+    console.log("Fetched stages:", jsonData.data);
     setStagesList(jsonData.data);
     console.log(jsonData, "lista", stagesList.data, "stagesList");
   }
@@ -50,7 +50,15 @@ export default function StagesList() {
     </>
   );
 }
-export function StageSection(stage, handleEditClick) {
+export function StageSection({ stage, handleEditClick, handleDeleteClick }) {
+  console.log("Stage object:", stage); // Add this line for debugging
+
+  const handleDelete = () => {
+    console.log("Deleting stage with ID:", stage.id);
+    if (handleDeleteClick) {
+      handleDeleteClick(stage.id);
+    }
+  };
   return (
     <div className={"w-full py-24 border-b flex"}>
       <div className={"flex flex-col gap-6  w-2/3 pl-24"}>
@@ -67,6 +75,12 @@ export function StageSection(stage, handleEditClick) {
             onClick={() => handleEditClick(stage.id)}
           >
             Show
+          </button>
+          <button
+            className="w-full bg-red-500 hover:bg-red-800 px-8 py-4 rounded-lg text-white transition-colors"
+            onClick={handleDelete}
+          >
+            Remove
           </button>
         </div>
       </div>

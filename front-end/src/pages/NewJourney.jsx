@@ -32,9 +32,10 @@ export default function NewJourney() {
   }, [showStageOverlay]);
 
   const handleAddStage = (newStage) => {
+    console.log("New Stage Data:", newStage);
     setStages((prevStages) => [
       ...prevStages,
-      { ...newStage, journeyId: formData.id },
+      { ...newStage, journeyId: formData.id, id: uuidv4() }, // Ensure unique ID is assigned
     ]);
   };
 
@@ -47,6 +48,7 @@ export default function NewJourney() {
   };
 
   const handleDeleteStage = (stageId) => {
+    console.log("Delete function called with ID:", stageId);
     setStages((prevStages) =>
       prevStages.filter((stage) => stage.id !== stageId)
     );
@@ -56,7 +58,9 @@ export default function NewJourney() {
     setOverlayData(stageData);
     setShowStageOverlay(true);
   };
-
+  useEffect(() => {
+    console.log("Stages:", stages);
+  }, [stages]);
   return (
     <JourneysProvider>
       <CreateNewJourney

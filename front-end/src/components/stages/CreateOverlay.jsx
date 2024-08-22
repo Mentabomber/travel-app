@@ -21,8 +21,13 @@ export default function NewStageOverlay({ show, data, onSave, onClose }) {
   }, [data]);
   function handleSave(e) {
     e.preventDefault();
-    onSave(formData);
-    handleClose();
+    if (formData.title && formData.description) {
+      // Ensure data is present
+      onSave(formData); // Pass formData to parent component
+      handleClose(); // Close the overlay
+    } else {
+      alert("Please fill out all required fields");
+    }
   }
 
   function handleClose() {
