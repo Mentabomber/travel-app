@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import styles from "../../css/modules/NewStageOverlay.module.css";
+import { SearchBox } from "../../utils/googlemaps/SearchBox";
+import { StageMap } from "../../utils/googlemaps/Map";
+// import { Loader } from "@googlemaps/js-api-loader";
 
 const initialFormData = {
   title: "",
@@ -14,15 +17,32 @@ export default function NewStageOverlay({ show, data, onSave, onClose }) {
   const [formData, setFormData] = useState(initialFormData);
   const [closing, setClosing] = useState(false);
 
+  const [coordinates, setCoordinates] = useState({
+    lat: 51.509865,
+    lng: -0.118092,
+  });
+
+  // Update formData with new coordinates when they change
+  useEffect(() => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      lat: coordinates.lat,
+      lng: coordinates.lng,
+    }));
+  }, [coordinates]);
+
+  const handleLocationChange = (newCoordinates) => {
+    setCoordinates(newCoordinates);
+  };
   useEffect(() => {
     if (data) {
       setFormData(data);
     }
   }, [data]);
+
   function handleSave(e) {
     e.preventDefault();
-    if (formData.title && formData.description) {
-      // Ensure data is present
+    if (formData.title && formData.description && formData.date) {
       onSave(formData); // Pass formData to parent component
       handleClose(); // Close the overlay
     } else {
@@ -38,6 +58,7 @@ export default function NewStageOverlay({ show, data, onSave, onClose }) {
       setClosing(false);
     }, 500);
   }
+
   return (
     show && (
       <div
@@ -79,6 +100,24 @@ export default function NewStageOverlay({ show, data, onSave, onClose }) {
                 id="description_input"
                 className="w-full border-2 border-gray-300 rounded-lg px-4 py-2"
               />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="date_input">Date</label>
+              <input
+                type="date"
+                value={formData.date}
+                onChange={(e) =>
+                  setFormData({ ...formData, date: e.target.value })
+                }
+                id="date_input"
+                className="w-full border-2 border-gray-300 rounded-lg px-4 py-2"
+              />
+            </div>
+            <div className="mb-4">
+              <SearchBox onLocationChange={handleLocationChange} />
+            </div>
+            <div className="mb-4">
+              <StageMap markerLocation={coordinates} />
             </div>
 
             {/* Form Submit Button */}

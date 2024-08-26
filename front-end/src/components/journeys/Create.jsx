@@ -9,6 +9,7 @@ export default function CreateNewJourney({
   setFormData,
   stages,
   onAddStage,
+  onEditStage,
   onUpdateStage,
   onDeleteStage,
 }) {
@@ -98,7 +99,7 @@ export default function CreateNewJourney({
                   <StageSection
                     key={stage.id}
                     stage={stage}
-                    handleEditClick={onUpdateStage}
+                    handleEditClick={onEditStage}
                     handleDeleteClick={onDeleteStage}
                   />
                 ))}

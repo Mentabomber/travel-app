@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import FabButton from "../components/FabButton";
 import JourneysProvider from "../contexts/JourneysContext";
 import CreateNewJourney from "../components/journeys/Create";
-import StageOverlay from "../components/stages/CreateOverlay";
+import StageCreateOverlay from "../components/stages/CreateOverlay";
+import StageUpdateOverlay from "../components/stages/UpdateOverlay";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { v4 as uuidv4 } from "uuid";
 
 export default function NewJourney() {
-  const [showStageOverlay, setShowStageOverlay] = useState(false);
-  const [overlayData, setOverlayData] = useState(null);
+  const [showStageCreateOverlay, setShowStageCreateOverlay] = useState(false);
+  const [showStageUpdateOverlay, setShowStageUpdateOverlay] = useState(false);
+  const [selectedStageId, setSelectedStageId] = useState(null); // Store the ID of the stage being edited
   const [stages, setStages] = useState([]);
   const [formData, setFormData] = useState({
     id: uuidv4(),
@@ -22,21 +24,27 @@ export default function NewJourney() {
 
   useEffect(() => {
     // Manage body overflow when overlay is open
-    document.body.classList.toggle("overflow-hidden", showStageOverlay);
-    document.body.classList.toggle("pr-4", showStageOverlay);
+    document.body.classList.toggle(
+      "overflow-hidden",
+      showStageCreateOverlay || showStageUpdateOverlay
+    );
+    document.body.classList.toggle(
+      "pr-4",
+      showStageCreateOverlay || showStageUpdateOverlay
+    );
 
-    // Reset overlayData when overlay is closed
-    if (!showStageOverlay) {
-      setOverlayData(null);
+    // Reset selectedStageId when both overlays are closed
+    if (!showStageCreateOverlay && !showStageUpdateOverlay) {
+      setSelectedStageId(null);
     }
-  }, [showStageOverlay]);
+  }, [showStageCreateOverlay, showStageUpdateOverlay]);
 
   const handleAddStage = (newStage) => {
-    console.log("New Stage Data:", newStage);
     setStages((prevStages) => [
       ...prevStages,
       { ...newStage, journeyId: formData.id, id: uuidv4() }, // Ensure unique ID is assigned
     ]);
+    setShowStageCreateOverlay(false); // Close the create overlay after saving
   };
 
   const handleUpdateStage = (updatedStage) => {
@@ -45,22 +53,30 @@ export default function NewJourney() {
         stage.id === updatedStage.id ? updatedStage : stage
       )
     );
+    setShowStageUpdateOverlay(false); // Close the update overlay after saving
   };
 
   const handleDeleteStage = (stageId) => {
-    console.log("Delete function called with ID:", stageId);
     setStages((prevStages) =>
       prevStages.filter((stage) => stage.id !== stageId)
     );
   };
 
-  const openEditOverlay = (stageData) => {
-    setOverlayData(stageData);
-    setShowStageOverlay(true);
+  const openEditOverlay = (stageId) => {
+    setSelectedStageId(stageId); // Store the ID of the stage to be edited
+    setShowStageUpdateOverlay(true);
   };
+
+  // Get the stage data to populate the overlay based on the selected stage ID
+  const overlayData =
+    selectedStageId !== null
+      ? stages.find((stage) => stage.id === selectedStageId)
+      : null;
+
   useEffect(() => {
     console.log("Stages:", stages);
   }, [stages]);
+
   return (
     <JourneysProvider>
       <CreateNewJourney
@@ -68,20 +84,28 @@ export default function NewJourney() {
         setFormData={setFormData}
         stages={stages}
         onAddStage={handleAddStage}
+        onEditStage={openEditOverlay} // Passing openEditOverlay instead of onUpdateStage
         onUpdateStage={handleUpdateStage}
         onDeleteStage={handleDeleteStage}
       />
-      {/* Button to trigger the stage overlay */}
-      <FabButton onClick={() => setShowStageOverlay(true)}>
+      {/* Button to trigger the stage creation overlay */}
+      <FabButton onClick={() => setShowStageCreateOverlay(true)}>
         <PlusIcon className="group-hover:rotate-180 group-hover:scale-125 duration-500"></PlusIcon>
       </FabButton>
 
-      {/* Overlay for adding or editing stages */}
-      <StageOverlay
-        show={showStageOverlay}
-        data={overlayData}
+      {/* Overlay for creating stages */}
+      <StageCreateOverlay
+        show={showStageCreateOverlay}
         onSave={handleAddStage}
-        onClose={() => setShowStageOverlay(false)}
+        onClose={() => setShowStageCreateOverlay(false)}
+      />
+
+      {/* Overlay for updating stages */}
+      <StageUpdateOverlay
+        show={showStageUpdateOverlay}
+        data={overlayData} // Pass the full stage data for the selected stage
+        onSave={handleUpdateStage}
+        onClose={() => setShowStageUpdateOverlay(false)}
       />
     </JourneysProvider>
   );

@@ -26,7 +26,7 @@ export default function Show() {
       if (jsonData === null) {
         navigation("not-found");
       } else {
-        setPhoto(jsonData);
+        setJourney(jsonData);
       }
     } catch (error) {
       console.log(error);

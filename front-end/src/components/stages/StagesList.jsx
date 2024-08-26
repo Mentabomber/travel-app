@@ -37,7 +37,7 @@ export default function StagesList() {
       <section className="py-8">
         <div className="container px-4 mx-auto">
           {stagesList
-            .filter((stage) => stage.journeyId === journey.id)
+            .filter((stage) => stage.journeyId === journey.id || "")
             .map((stage) => (
               <StageSection
                 key={stage.id}
@@ -51,12 +51,18 @@ export default function StagesList() {
   );
 }
 export function StageSection({ stage, handleEditClick, handleDeleteClick }) {
-  console.log("Stage object:", stage); // Add this line for debugging
+  console.log("Stage object:", stage);
 
   const handleDelete = () => {
     console.log("Deleting stage with ID:", stage.id);
     if (handleDeleteClick) {
       handleDeleteClick(stage.id);
+    }
+  };
+  const handleUpdate = () => {
+    console.log("Updating stage with ID:", stage.id);
+    if (handleEditClick) {
+      handleEditClick(stage.id);
     }
   };
   return (
@@ -72,7 +78,7 @@ export function StageSection({ stage, handleEditClick, handleDeleteClick }) {
         <div className="flex gap-4">
           <button
             className="w-full bg-blue-500 hover:bg-blue-800 px-8 py-4 rounded-lg text-white transition-colors"
-            onClick={() => handleEditClick(stage.id)}
+            onClick={handleUpdate}
           >
             Show
           </button>
